@@ -1,6 +1,15 @@
+import { motion } from "motion/react";
+
 export default function About() {
   return (
-    <div>
+    <motion.div
+      variants={{
+        hidden: { opacity: 0, y: 10 },
+        visible: { opacity: 1, y: 0 },
+      }}
+      animate="visible"
+      initial="hidden"
+    >
       <h1 className="text-3xl font-semibold text-center mb-10">
         À Propos
       </h1>
@@ -26,6 +35,6 @@ export default function About() {
         où il a été introduit, dont le Japon, les États-Unis, le
         Canada, la France et d'autres pays européens.
       </div>
-    </div>
+    </motion.div>
   );
 }

@@ -1,6 +1,9 @@
+import { useMutation } from "@tanstack/react-query";
+import { motion } from "motion/react";
 import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { queryClient } from "../clients/queryClient";
 import MakeForm from "../components/MakeForm/MakeForm";
 import { Pokemon } from "../types/pokemon";
 
@@ -56,16 +59,32 @@ export default function CreatePokemon() {
       },
     );
     if (!response.ok) {
-      toast.error("Une erreur est survenu lors de création");
-      return;
+      throw new Error("Une erreur est survenu lors de création");
     }
     const { name: newPokeId } = await response.json();
-
-    navigate(`/pokemon/${newPokeId}`);
+    return newPokeId;
   };
 
+  const { mutate } = useMutation({
+    mutationFn: onCreateNewPokemon,
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["pokemons"] });
+      navigate(`/pokemon/${data}`);
+    },
+    onError: (err) => {
+      toast.error(err.message);
+    },
+  });
+
   return (
-    <div>
+    <motion.div
+      variants={{
+        hidden: { opacity: 0, y: 10 },
+        visible: { opacity: 1, y: 0 },
+      }}
+      initial="hidden"
+      animate="visible"
+    >
       <h1 className="text-3xl font-semibold text-center mb-10">
         Créer un pokémon
       </h1>
@@ -82,9 +101,9 @@ export default function CreatePokemon() {
           speedRef={speed}
           imageRef={image}
           typesRef={types}
-          onFormSubmittedHandler={onCreateNewPokemon}
+          onFormSubmittedHandler={mutate}
         />
       </div>
-    </div>
+    </motion.div>
   );
 }

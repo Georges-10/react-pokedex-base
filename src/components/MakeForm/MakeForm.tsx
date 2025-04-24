@@ -1,3 +1,5 @@
+import { UseMutateFunction } from "@tanstack/react-query";
+import { motion } from "motion/react";
 import {
   FormEvent,
   HTMLAttributes,
@@ -9,8 +11,7 @@ import { Pokemon } from "../../types/pokemon";
 import { PokemonTypeCheckbox } from "./checkBoxForm";
 import { LabeledInput } from "./labelInput";
 import { PokemonType } from "./poketype";
-import { PokemonStatsGroup } from "./statePokemongroup";
-
+import { PokemonStatsGroup } from "./statePokemonGroup";
 export type PokemonRefs = {
   nameRef: RefObject<HTMLInputElement>;
   heightRef: RefObject<HTMLInputElement>;
@@ -23,7 +24,9 @@ export type PokemonRefs = {
   speedRef: RefObject<HTMLInputElement>;
   imageRef: RefObject<HTMLInputElement>;
   typesRef: RefObject<Record<string, HTMLInputElement>>;
-  onFormSubmittedHandler: () => Promise<void>;
+  onFormSubmittedHandler:
+    | UseMutateFunction<void, Error, void, unknown>
+    | (() => Promise<void>);
   pokemon?: Pokemon;
 } & HTMLAttributes<HTMLDivElement>;
 
@@ -160,13 +163,19 @@ export default function MakeForm({
         />
       </div> */}
       <div className="flex justify-center">
-        <button
+        <motion.button
           type="submit"
           className="bg-yellow-500 text-white px-10 py-3 rounded-md hover:bg-yellow-600 duration-150"
           onClick={(e) => onBeforeSubmitHandler(e)}
+          whileHover={{
+            scale: 1.5,
+          }}
+          whileInView={{
+            scale: 1.1,
+          }}
         >
           {pokemon ? "Evoluer le pokémon" : "Faire naître un pokémon"}
-        </button>
+        </motion.button>
       </div>
     </form>
   );

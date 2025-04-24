@@ -1,9 +1,13 @@
+import {
+  QueryClientProvider,
+} from "@tanstack/react-query";
 import { lazy, Suspense } from "react";
 import {
   createBrowserRouter,
   LoaderFunctionArgs,
   RouterProvider,
 } from "react-router-dom";
+import { queryClient } from "./clients/queryClient";
 import Main from "./layouts/Main";
 import Error from "./pages/Error";
 import { getPokemonById } from "./utils/pokemonStore";
@@ -26,8 +30,8 @@ const router = createBrowserRouter([
             <Home />
           </Suspense>
         ),
-        loader: () =>
-          import("./pages/Home").then((module) => module.loader()),
+        /*  loader: () =>
+          import("./pages/Home").then((module) => module.loader()), */
       },
       {
         path: "/about",
@@ -63,7 +67,9 @@ const router = createBrowserRouter([
 export default function App() {
   return (
     <div>
-      <RouterProvider router={router} />
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={router} />
+      </QueryClientProvider>
     </div>
   );
 }
