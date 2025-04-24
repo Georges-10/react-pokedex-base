@@ -1,4 +1,4 @@
-# React - Typescript - tailwindCss whith from Believemy courses
+# React - Typescript - tailwindCss with Believemy courses
 
 - `npm install`
 - `npm run dev`
